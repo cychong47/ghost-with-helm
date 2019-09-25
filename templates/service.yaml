@@ -6,11 +6,15 @@ metadata:
 {{ include "ghost.labels" . | indent 4 }}
 spec:
   type: {{ .Values.service.type }}
+  {{- if eq .Values.service.type "NodePort" }}
   externalTrafficPolicy : {{ .Values.service.externalTrafficPolicy }}
-  externalTPs : {{ .Values.service.externalIPs }}
+  {{- end}}
+  externalIPs : {{ .Values.service.externalIPs }}
   ports:
     - port: {{ .Values.service.port }}
+      {{- if eq .Values.service.type "NodePort" }}
       targetPort: {{ .Values.service.targetPort }}
+      {{- end}}
       protocol: TCP
       name: http
   selector:
